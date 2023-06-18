@@ -11,7 +11,7 @@ class Process:
         self.priority = priority
 
 
-def calculate_gantt_chart(processes, age_limit):
+def calculate_gantt_chart(processes, age_limit=float("inf")):
     sorted_processes = sorted(processes, key=lambda p: (p.arrival_time, -p.priority, p.burst_time))
     gantt_chart = []
     total_cpu_idle_time = 0
