@@ -32,7 +32,7 @@ def calculate_gantt_chart(processes, age_limit):
             process.age += 1
 
         if selected_process is None:
-            total_cpu_idle_time += 1
+            total_cpu_idle_time +=1
             current_time += 1
         else:
             if selected_process.started == False:
@@ -88,7 +88,7 @@ processes = [
     Process(5, 5, 5)
 ]
 
-age_limit = 5
+age_limit = float('inf')
 
 gantt_chart, total_cpu_idle_time = calculate_gantt_chart(processes, age_limit)
 

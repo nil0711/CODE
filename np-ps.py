@@ -11,7 +11,7 @@ class Process:
         self.priority = priority
 
 
-def calculate_gantt_chart(processes, age_limit=float("inf")):
+def calculate_gantt_chart(processes, age_limit):
     sorted_processes = sorted(processes, key=lambda p: (p.arrival_time, -p.priority, p.burst_time))
     gantt_chart = []
     total_cpu_idle_time = 0
@@ -67,16 +67,24 @@ def calculate_throughput(processes):
     return len(processes) / sum(process.turnaround_time for process in processes)
 
 
-processes = [
-    Process(1, 0, 3, 2),
-    Process(2, 6, 2, 1),
-    Process(3, 0, 9, 3),
-    Process(4, 3, 12, 4),
-    Process(5, 5, 5, 2)
+# processes = [
+#     Process(1, 1, 3, 2),
+#     Process(2, 5, 2, 1),
+#     Process(3, 0, 2, 1),
+#     Process(4, 0, 5, 4),
+#     Process(5, 2, 1, 4)
+# ]
+
+processes=[
+    Process( 1, 0, 6, 3),
+Process(2 ,1 ,3 ,5),
+Process(3 ,2 ,8 ,2),
+Process(4 ,3 ,4 ,4),
+Process(5 ,4 ,2 ,1)
 ]
 
-age_limit = 100
 
+age_limit = float('inf')
 gantt_chart, cpu_idle_time = calculate_gantt_chart(processes, age_limit)
 
 print("Gantt Chart:")
@@ -86,3 +94,4 @@ print("\nTotal CPU Idle Time:", cpu_idle_time)
 print("Average Waiting Time:", calculate_average_waiting_time(gantt_chart))
 print("Average Turnaround Time:", calculate_average_turnaround_time(gantt_chart))
 print("Throughput:", calculate_throughput(gantt_chart))
+

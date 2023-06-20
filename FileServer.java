@@ -14,7 +14,6 @@ public class FileServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
 
-                // Create a new thread to handle the client
                 Thread clientThread = new Thread(new ClientHandler(clientSocket));
                 clientThread.start();
             }
