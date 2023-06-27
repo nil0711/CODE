@@ -29,10 +29,7 @@ front = sorted(front)
 back = sorted(back)
 tracks = front + back if forwarded else sorted(back, reverse=True ) + sorted(front,reverse=True)
 
-print(forwarded)
-print(front)
-print(back)
-print(tracks)
+
 while tracks:
     next_pos = tracks[0]
     number_of_cylinders.append(abs(next_pos-head_pointer))

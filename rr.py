@@ -79,8 +79,21 @@ def calculate_average_turnaround_time(completed_process):
     return total_turnaround_time / len(completed_process)
 
 
-def calculate_throughput(completed_process):
-    return len(completed_process) / sum(process.turnaround_time for process in completed_process)
+def calculate_throughput(gantt_chart):    
+    max_ct = max(process.completion_time for process in gantt_chart)
+    min_at = min(process.arrival_time for process in gantt_chart)
+    return len(gantt_chart) / (max_ct-min_at) 
+
+def print_processes(processes):
+    print("\nInput: ")
+    print('\nProcesses: ')
+    print("{:<5} {:<10} {:<10} ".format(
+        "PID", "Arrival", "Burst"
+    ))
+    for process in processes:
+        print("{:<5} {:<10} {:<10} ".format(
+            process.pid, process.arrival_time, process.burst_time
+        ))
 
 
 processes = [
@@ -92,8 +105,10 @@ processes = [
     Process(6, 5, 4)
 ]
 
-completed_process, cpu_idle_time = round_robin_scheduling(processes, time_quantum=2)
 
+print_processes(processes)
+completed_process, cpu_idle_time = round_robin_scheduling(processes, time_quantum=2)
+completed_process = sorted(completed_process , key=lambda p : p.start_time)
 print("Gantt Chart:")
 print_gantt_chart(completed_process)
 

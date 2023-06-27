@@ -1,5 +1,5 @@
 class Process:
-    def __init__(self, pid, arrival_time, burst_time, priority):
+    def __init__(self, pid, arrival_time, burst_time):
         self.pid = pid
         self.arrival_time = arrival_time
         self.burst_time = burst_time
@@ -7,13 +7,11 @@ class Process:
         self.completion_time = 0
         self.turnaround_time = 0
         self.waiting_time = 0
-        self.added=False
+        self.added= False
         self.age = 0
-        self.priority = priority
 
-
-def priority_scheduling_non_preemptive(processes):
-    sorted_processes = sorted(processes, key=lambda p: (p.arrival_time,p.priority, p.pid))
+def sjf(processes, age_limit):
+    sorted_processes = sorted(processes, key=lambda p: (p.arrival_time, p.burst_time))
     gantt_chart = []
     total_cpu_idle_time = 0
     current_time = 0
@@ -31,15 +29,16 @@ def priority_scheduling_non_preemptive(processes):
                 
         if running_process in sorted_processes:
             sorted_processes.remove(running_process)
+        selected_process = min(running_process, key=lambda p : p.burst_time)
+
         
-        
-        selected_process = min(running_process, key=lambda p : p.priority)
         for process in running_process:
             if process is not selected_process:
                 process.age += current_time - process.arrival_time + selected_process.burst_time
         for process in running_process:
             if process.age >= age_limit:
-                selected_process = process
+                if process.age > selected_process.age:
+                    selected_process = process
         
         
         sorted_processes.remove(selected_process)
@@ -63,13 +62,15 @@ def priority_scheduling_non_preemptive(processes):
 
 
 
+
+        
 def print_gantt_chart(gantt_chart):
-    print("{:<5} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-        "PID", "Arrival", "Priority", "Start", "Burst", "Completion", "Turnaround", "Waiting"
+    print("{:<5} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
+        "PID", "Arrival", "Start", "Burst", "Completion", "Turnaround", "Waiting"
     ))
     for process in gantt_chart:
-        print("{:<5} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-            process.pid, process.arrival_time, process.priority, process.start_time, process.burst_time,
+        print("{:<5} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
+            process.pid, process.arrival_time, process.start_time, process.burst_time,
             process.completion_time, process.turnaround_time, process.waiting_time
         ))
 
@@ -89,42 +90,42 @@ def calculate_throughput(gantt_chart):
     min_at = min(process.arrival_time for process in gantt_chart)
     return len(gantt_chart) / (max_ct-min_at) 
 
+
 def print_processes(processes,age_limit):
     print("\nInput: ")
     print('\nProcesses: ')
-    print("{:<5} {:<10} {:<10} {:<10} ".format(
-        "PID", "Priority", "Arrival", "Burst"
+    print("{:<5} {:<10} {:<10} ".format(
+        "PID", "Arrival", "Burst"
     ))
     for process in processes:
-        print("{:<5} {:<10} {:<10} {:<10} ".format(
-            process.pid, process.priority, process.arrival_time, process.burst_time
+        print("{:<5} {:<10} {:<10} ".format(
+            process.pid, process.arrival_time, process.burst_time
         ))
         
     print(f"\nAge limit = {age_limit}")
-
     
 
 
-
-processes=[
-    Process(1, 3, 3 ,3),
-    Process(2, 1, 7 ,2),
-    Process(3, 1, 4 ,4),
-    Process(4, 4, 2 ,5),
-    Process(5 ,2, 5 ,1)
+# Sample input
+processes = [
+    Process(1, 0, 7),
+    Process(2, 2, 5),
+    Process(3, 4, 3)
 ]
 
-
 age_limit = float('inf')
+
 print_processes(processes,age_limit)
-gantt_chart, cpu_idle_time = priority_scheduling_non_preemptive(processes)
-gantt_chart=sorted(gantt_chart, key = lambda p : p.start_time)
+gantt_chart, cpu_idle_time = sjf(processes,age_limit)
+
+gantt_chart = sorted(gantt_chart, key = lambda p : p.start_time)
+
 print("\nOutput: ")
 
+print("\nGantt Chart:")
 print_gantt_chart(gantt_chart)
 
 print("\nTotal CPU Idle Time:", cpu_idle_time)
 print("Average Waiting Time:", calculate_average_waiting_time(gantt_chart))
 print("Average Turnaround Time:", calculate_average_turnaround_time(gantt_chart))
 print("Throughput:", calculate_throughput(gantt_chart))
-
