@@ -1,12 +1,9 @@
-import ctypes as ct
+import tkinter as tk
+ 
+root = tk.Tk()
 
-c_file = "/home/anon/CODE/file_explorer/file_opretion.so"
+root.geometry('500x600')
 
-c_fun = ct.CDLL(c_file)
+# root.iconbitmap("/home/anon/CODE/file_explorer/folder.png")
 
-a = c_fun.hello()
-
-print(a)
-
-c_fun.diplay(b"Anu Kumari",30)
-
+root.mainloop()
