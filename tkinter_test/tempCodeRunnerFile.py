@@ -1,1 +1,1 @@
-600x600
+            self.rename_button.config(state=tk.DISABLED)
